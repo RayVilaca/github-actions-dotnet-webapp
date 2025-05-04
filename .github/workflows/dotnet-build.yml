@@ -1,0 +1,29 @@
+name: .Net workflow
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 */1 * * *'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+
+    - name: Download dependencies
+      run: dotnet restore **/*.csproj
+    
+    - name: Build the webapp
+      run: dotnet build **/*.csproj --no-restore
+    
+    - name: Run tests
+      run: dotnet test **/*.csproj --no-build --verbosity normal
+
+    - run: echo "Finish"
